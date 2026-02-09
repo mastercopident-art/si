@@ -1,446 +1,612 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Para el amor de mi vida</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para el amor de mi vida</title>
 
-<style>
-:root{
-  --bg:#f6efe6;
-  --ink:#2a2a2a;
-  --muted:#6b6b6b;
-  --trunk:#8b5a2b;
-  --branch:#7a4c26;
-  --heart1:#e63946;
-  --heart2:#ff4d6d;
-  --heart3:#ff8fab;
-}
+  <!-- Fuentes bonitas (carga desde Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-*{box-sizing:border-box}
-html,body{height:100%}
+  <style>
+    :root{
+      --bg:#f6efe6;
+      --ink:#1f1f1f;
+      --muted:#6b6b6b;
 
-body{
-  margin:0;
-  font-family: ui-serif, Georgia, serif;
-  background: var(--bg);
-  overflow:hidden;
-  color:var(--ink);
-}
+      --paper1: rgba(255,255,255,.78);
+      --paper2: rgba(255,255,255,.54);
 
-/* =======================
-   START SCREEN (Nurse)
-======================= */
-#startScreen{
-  position:fixed; inset:0;
-  display:block;
-  background:#000;
-}
+      --trunk:#8b5a2b;
+      --branch:#7a4c26;
 
-#startImg{
-  position:absolute;
-  inset:0;
-  margin:auto;
-  width:100%;
-  height:100%;
+      --heart1:#e63946;
+      --heart2:#ff4d6d;
+      --heart3:#ff8fab;
 
-  /* ✅ Esto evita el “zoom” */
-  object-fit: contain;
-  object-position: center;
+      --shadow: 0 25px 70px rgba(0,0,0,.14);
+    }
 
-  filter: saturate(1.03) contrast(1.02);
-}
-  /* ✅ “Alejar” la imagen (menos recorte/zoom) */
-  object-position: 50% 32%;
-  transform: scale(0.92);
-  transform-origin: 50% 35%;
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      overflow:hidden;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-  filter: saturate(1.05) contrast(1.03);
-}
+    /* =======================
+      START SCREEN (Nurse) - FOTO COMPLETA + BLUR
+    ======================= */
+    #startScreen{
+      position:fixed; inset:0;
+      display:block;
+      background:#000;
+    }
 
-#startShade{
-  position:absolute; inset:0;
-  background: linear-gradient(to top, rgba(0,0,0,.58), rgba(0,0,0,.18) 45%, rgba(0,0,0,.05));
-}
+    #bgBlur{
+      position:absolute; inset:-40px;
+      background-image: url("./enfermera.jpg");
+      background-size: cover;
+      background-position: center;
+      filter: blur(24px) saturate(1.05);
+      transform: scale(1.08);
+      opacity: .85;
+    }
 
-#startLabel{
-  position:absolute;
-  left:50%;
-  bottom:22px;
-  transform:translateX(-50%);
-  width:min(92vw, 520px);
-  background: rgba(255,255,255,.88);
-  border:1px solid rgba(0,0,0,.08);
-  border-radius:16px;
-  padding:12px 14px;
-  text-align:center;
-  font-size:1.02rem;
-  box-shadow:0 12px 35px rgba(0,0,0,.18);
-}
+    #startImg{
+      position:absolute;
+      inset:0;
+      margin:auto;
+      width:100%;
+      height:100%;
+      object-fit: contain;      /* ✅ sin recorte */
+      object-position: center;
+      filter: saturate(1.03) contrast(1.02);
+    }
 
-/* Heart hotspot */
-#hotspot{
-  position:absolute;
+    #startShade{
+      position:absolute; inset:0;
+      background: radial-gradient(900px 600px at 50% 30%, rgba(0,0,0,.10), rgba(0,0,0,.45));
+    }
 
-  /* Si quieres mover el corazón sobre el pecho, ajusta esto: */
-  left: 56%;
-  top: 46%;
+    #startLabel{
+      position:absolute;
+      left:50%;
+      bottom:22px;
+      transform:translateX(-50%);
+      width:min(92vw, 560px);
+      background: rgba(255,255,255,.92);
+      border:1px solid rgba(0,0,0,.10);
+      border-radius:16px;
+      padding:12px 14px;
+      text-align:center;
+      font-size:1.02rem;
+      box-shadow:0 12px 35px rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+    }
 
-  width:84px;
-  height:84px;
-  transform:translate(-50%,-50%);
-  border-radius:999px;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color: transparent;
-}
+    /* Hotspot corazón */
+    #hotspot{
+      position:absolute;
 
-#hotspot::before{
-  content:"";
-  position:absolute; inset:0;
-  border-radius:999px;
-  background: rgba(230,57,70,.18);
-  animation: pulse 1.3s ease-in-out infinite;
-}
+      /* Ajusta fino si quieres: */
+      left: 56%;
+      top: 52%;
 
-#hotspot::after{
-  content:"❤";
-  position:absolute; inset:0;
-  display:grid;
-  place-items:center;
-  font-size:34px;
-  color: var(--heart1);
-  filter: drop-shadow(0 8px 10px rgba(0,0,0,.25));
-  animation: floaty 1.6s ease-in-out infinite;
-}
+      width:86px; height:86px;
+      transform:translate(-50%,-50%);
+      border-radius:999px;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-@keyframes pulse{
-  0%{transform:scale(.92); opacity:.7}
-  60%{transform:scale(1.15); opacity:.95}
-  100%{transform:scale(.92); opacity:.7}
-}
-@keyframes floaty{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-4px)}
-}
+    #hotspot::before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:999px;
+      background: rgba(230,57,70,.18);
+      animation: pulse 1.3s ease-in-out infinite;
+    }
+    #hotspot::after{
+      content:"❤";
+      position:absolute; inset:0;
+      display:grid;
+      place-items:center;
+      font-size:34px;
+      color: var(--heart1);
+      filter: drop-shadow(0 8px 10px rgba(0,0,0,.25));
+      animation: floaty 1.6s ease-in-out infinite;
+    }
 
-/* =======================
-   MAIN SCENE
-======================= */
-#scene{
-  position:fixed; inset:0;
-  display:none;
-  background: radial-gradient(1200px 800px at 20% 0%, #fff7ef 0%, var(--bg) 55%, #f3e6d8 100%);
-}
+    @keyframes pulse{
+      0%{transform:scale(.92); opacity:.7}
+      60%{transform:scale(1.15); opacity:.95}
+      100%{transform:scale(.92); opacity:.7}
+    }
+    @keyframes floaty{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-4px)}
+    }
 
-#card{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(980px, 92vw);
-  height:min(560px, 86vh);
-  background: rgba(255,255,255,.55);
-  border:1px solid rgba(0,0,0,.08);
-  border-radius:26px;
-  box-shadow: 0 25px 80px rgba(0,0,0,.12);
-  overflow:hidden;
-  backdrop-filter: blur(6px);
-}
+    /* =======================
+      SCENE
+    ======================= */
+    #scene{
+      position:fixed; inset:0;
+      display:none;
+      background:
+        radial-gradient(1200px 800px at 20% 0%, #fff7ef 0%, var(--bg) 55%, #f3e6d8 100%);
+    }
+    #scene::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 550px at 18% 18%, rgba(255,255,255,.55), transparent 65%),
+        radial-gradient(700px 420px at 85% 85%, rgba(255,255,255,.35), transparent 70%);
+      pointer-events:none;
+      opacity:.9;
+    }
 
-#grid{
-  position:absolute; inset:0;
-  display:grid;
-  grid-template-columns: 1.05fr .95fr;
-  gap:18px;
-  padding:32px 32px 72px 32px;
-}
+    #card{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:min(1020px, 92vw);
+      height:min(590px, 86vh);
 
-#text{
-  white-space:pre-line;
-  font-size:1.06rem;
-  line-height:1.5;
-  color:var(--ink);
-  padding-right:10px;
-}
+      background:
+        radial-gradient(1200px 700px at 10% 10%, var(--paper1), var(--paper2)),
+        linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.48));
 
-#signature{
-  margin-top:14px;
-  color:var(--muted);
-  font-style:italic;
-}
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:28px;
+      box-shadow:
+        var(--shadow),
+        inset 0 1px 0 rgba(255,255,255,.55);
 
-#question{
-  margin-top:14px;
-  font-size:1.05rem;
-  font-weight:700;
-  color:var(--ink);
-}
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+      animation: cardIn .55s ease-out both;
+    }
+    @keyframes cardIn{
+      from{ transform:translate(-50%,-50%) scale(.985); opacity:0 }
+      to{ transform:translate(-50%,-50%) scale(1); opacity:1 }
+    }
 
-#counter{
-  position:absolute;
-  left:32px;
-  right:32px;
-  bottom:22px;
-  font-size:.95rem;
-  color:var(--ink);
-}
-#counter .label{color:var(--muted)}
-#counter .time{font-variant-numeric: tabular-nums; font-weight:700}
+    /* “Grano” sutil tipo papel */
+    #card::before{
+      content:"";
+      position:absolute; inset:0;
+      background-image: radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px);
+      background-size: 14px 14px;
+      opacity:.18;
+      pointer-events:none;
+      mix-blend-mode: multiply;
+    }
 
-#treeWrap{
-  position:relative;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  padding-bottom:18px;
-  min-height:100%;
-}
+    #grid{
+      position:absolute; inset:0;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:20px;
+      padding:38px 38px 92px 38px;
+    }
 
-#treeSVG{
-  width:min(340px, 40vw);
-  height:auto;
-  overflow:visible;
-}
+    /* Columna texto */
+    #title{
+      font-family: "Playfair Display", ui-serif, Georgia, serif;
+      font-weight:700;
+      font-size:1.55rem;
+      margin:0 0 10px 0;
+      letter-spacing:.01em;
+    }
 
-.pathGrow{
-  fill:none;
-  stroke:var(--branch);
-  stroke-width:10;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-dasharray: 1200;
-  stroke-dashoffset: 1200;
-  animation: draw 2.2s ease forwards;
-}
-.trunk{
-  stroke:var(--trunk);
-  stroke-width:14;
-  animation-duration: 2.0s;
-}
-@keyframes draw{ to{stroke-dashoffset:0} }
+    #subtitle{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:.98rem;
+    }
 
-#leafHearts g{
-  opacity:0;
-  transform: scale(.88);
-  transform-origin: 50% 50%;
-  animation: pop 1.2s ease forwards;
-}
-#leafHearts g:nth-child(1){animation-delay:2.2s}
-#leafHearts g:nth-child(2){animation-delay:2.35s}
-#leafHearts g:nth-child(3){animation-delay:2.5s}
-#leafHearts g:nth-child(4){animation-delay:2.65s}
-#leafHearts g:nth-child(5){animation-delay:2.8s}
-#leafHearts g:nth-child(6){animation-delay:2.95s}
+    #text{
+      white-space:pre-line;
+      font-family: "Playfair Display", ui-serif, Georgia, serif;
+      font-weight:500;
+      font-size:1.08rem;
+      line-height:1.65;
+      color:var(--ink);
+      max-width: 52ch;
+    }
 
-@keyframes pop{
-  0%{opacity:0; transform:scale(.85)}
-  60%{opacity:1; transform:scale(1.05)}
-  100%{opacity:1; transform:scale(1)}
-}
+    .divider{
+      margin:18px 0 12px 0;
+      height:1px;
+      width:min(420px, 90%);
+      background: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,.12), rgba(0,0,0,0));
+    }
 
-.fallHeart{
-  position:fixed;
-  top:-40px;
-  will-change: transform, opacity;
-  pointer-events:none;
-  animation: fall linear forwards;
-  opacity:.95;
-  filter: drop-shadow(0 6px 8px rgba(0,0,0,.12));
-}
+    #signature{
+      margin-top:4px;
+      color:var(--muted);
+      font-style:italic;
+      font-family: "Playfair Display", ui-serif, Georgia, serif;
+    }
 
-@keyframes fall{
-  0%{ transform: translate3d(var(--x), -40px, 0) rotate(0deg); opacity:0}
-  10%{opacity:1}
-  100%{ transform: translate3d(calc(var(--x) + var(--drift)), 110vh, 0) rotate(var(--rot)); opacity:0}
-}
+    #question{
+      margin-top:10px;
+      font-size:1.05rem;
+      font-weight:800;
+      letter-spacing:.01em;
+      font-family: Inter, system-ui, sans-serif;
+    }
 
-@media (max-width: 720px){
-  #grid{
-    grid-template-columns: 1fr;
-    padding:22px 20px 86px 20px;
-  }
-  #treeWrap{order:2; padding-bottom:0}
-  #text{font-size:1.02rem}
-  #counter{left:20px; right:20px; bottom:18px; font-size:.92rem}
-  #treeSVG{width:min(320px, 78vw)}
-  #hotspot{width:74px;height:74px}
-}
-</style>
+    #firm{
+      margin-top:14px;
+      font-weight:800;
+      letter-spacing:.02em;
+      font-family: "Playfair Display", ui-serif, Georgia, serif;
+    }
+
+    /* Columna árbol */
+    #treeWrap{
+      position:relative;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      padding-bottom:18px;
+      min-height:100%;
+      isolation:isolate;
+    }
+
+    /* sombra “suelo” */
+    #treeWrap::after{
+      content:"";
+      position:absolute;
+      bottom:18px;
+      left:50%;
+      transform:translateX(-50%);
+      width:240px;
+      height:38px;
+      background: radial-gradient(closest-side, rgba(0,0,0,.18), transparent 70%);
+      filter: blur(6px);
+      opacity:.55;
+      z-index:0;
+    }
+
+    #treeSVG{
+      width:min(340px, 40vw);
+      height:auto;
+      overflow:visible;
+      z-index:1;
+
+      transform-origin: 50% 82%;
+      animation: sway 3.8s ease-in-out infinite;
+      filter: drop-shadow(0 16px 18px rgba(0,0,0,.10));
+    }
+
+    @keyframes sway{
+      0%,100%{ transform: rotate(-0.55deg) }
+      50%{ transform: rotate(0.75deg) }
+    }
+
+    /* dibujo del árbol (se activa cuando empieza la escena) */
+    .pathGrow{
+      fill:none;
+      stroke:var(--branch);
+      stroke-width:10;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+    }
+    .trunk{
+      stroke:var(--trunk);
+      stroke-width:14;
+    }
+
+    .run .pathGrow{
+      animation: draw 2.2s ease forwards;
+    }
+    .run .trunk{ animation-duration: 2.0s; }
+
+    @keyframes draw{ to{ stroke-dashoffset:0 } }
+
+    /* Hojas/corazones “aparecen” */
+    #leafHearts g{
+      opacity:0;
+      transform: scale(.88);
+      transform-origin: 50% 50%;
+    }
+    .run #leafHearts g{ animation: pop 1.15s ease forwards; }
+    .run #leafHearts g:nth-child(1){animation-delay:2.10s}
+    .run #leafHearts g:nth-child(2){animation-delay:2.25s}
+    .run #leafHearts g:nth-child(3){animation-delay:2.40s}
+    .run #leafHearts g:nth-child(4){animation-delay:2.55s}
+    .run #leafHearts g:nth-child(5){animation-delay:2.70s}
+    .run #leafHearts g:nth-child(6){animation-delay:2.85s}
+
+    @keyframes pop{
+      0%{opacity:0; transform:scale(.85)}
+      60%{opacity:1; transform:scale(1.05)}
+      100%{opacity:1; transform:scale(1)}
+    }
+
+    /* =======================
+      COUNTER
+    ======================= */
+    #counter{
+      position:absolute;
+      left:38px;
+      right:38px;
+      bottom:24px;
+      font-size:.95rem;
+      color:var(--ink);
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    #counter .label{ color:var(--muted); }
+    #counter .time{
+      font-variant-numeric: tabular-nums;
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    /* =======================
+      Hearts: desprenden del árbol
+    ======================= */
+    .leafHeart{
+      position:fixed;
+      left:0; top:0;
+      pointer-events:none;
+      will-change: transform, opacity;
+      opacity:0;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,.12));
+      animation: leafDrift linear forwards;
+    }
+
+    @keyframes leafDrift{
+      0%{
+        opacity:0;
+        transform: translate3d(var(--sx), var(--sy), 0) rotate(0deg) scale(var(--sc));
+      }
+      8%{ opacity:1; }
+      100%{
+        opacity:0;
+        transform:
+          translate3d(calc(var(--sx) + var(--dx)), calc(var(--sy) + var(--dy)), 0)
+          rotate(var(--rot))
+          scale(var(--sc));
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 760px){
+      #grid{
+        grid-template-columns: 1fr;
+        padding:24px 20px 92px 20px;
+      }
+      #treeWrap{ order:2; padding-bottom:0; }
+      #treeSVG{ width:min(330px, 82vw); }
+      #counter{ left:20px; right:20px; bottom:18px; font-size:.92rem; }
+      #title{ font-size:1.38rem; }
+      #text{ font-size:1.02rem; }
+      #hotspot{ width:76px; height:76px; }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- START SCREEN -->
-<div id="startScreen">
-  <img id="startImg" src="./enfermera.jpg" alt="Enfermera"
-       onerror="this.style.display='none'; document.getElementById('startLabel').textContent='No encontré la imagen 😅 Revisa que exista: enfermera.jpg';" />
-  <div id="startShade"></div>
+  <!-- START -->
+  <div id="startScreen">
+    <div id="bgBlur"></div>
+    <img id="startImg" src="./enfermera.jpg" alt="Enfermera"
+      onerror="this.style.display='none'; document.getElementById('startLabel').textContent='No encontré la imagen 😅 Revisa que exista: enfermera.jpg';" />
+    <div id="startShade"></div>
+    <div id="hotspot" aria-label="Tocar corazón"></div>
+    <div id="startLabel">Toca el corazón de la enfermera ❤️</div>
+  </div>
 
-  <div id="hotspot" aria-label="Tocar corazón"></div>
+  <!-- SCENE -->
+  <div id="scene">
+    <div id="card">
+      <div id="grid">
 
-  <div id="startLabel">Toca el corazón de la enfermera ❤️</div>
-</div>
+        <!-- TEXT -->
+        <div>
+          <h1 id="title">Para el amor de mi vida: Sigri</h1>
+          <p id="subtitle">Una pequeña carta con un árbol que crece… como esto que siento por ti.</p>
 
-<!-- MAIN SCENE -->
-<div id="scene">
-  <div id="card">
-    <div id="grid">
-      <div>
-        <div id="text"></div>
-        <div id="signature">— I Love You</div>
-        <div id="question">¿Quieres ser mi Valentine’s Day?</div>
+          <div id="text"></div>
+
+          <div class="divider"></div>
+
+          <div id="signature">— I Love You</div>
+          <div id="question">¿Quieres ser mi Valentine’s Day?</div>
+          <div id="firm">— Rogelio</div>
+        </div>
+
+        <!-- TREE -->
+        <div id="treeWrap">
+          <svg id="treeSVG" viewBox="0 0 360 460" aria-label="Árbol de corazones">
+            <!-- Tronco y ramas -->
+            <path class="pathGrow trunk" d="M180 440 C180 360 175 320 180 270 C186 210 205 195 210 160" />
+            <path class="pathGrow" d="M210 190 C250 200 280 175 300 145" />
+            <path class="pathGrow" d="M205 210 C245 240 275 245 310 225" />
+            <path class="pathGrow" d="M195 205 C160 235 120 240 80 215" />
+            <path class="pathGrow" d="M190 180 C150 185 125 165 100 135" />
+            <path class="pathGrow" d="M205 150 C235 120 250 95 250 70" />
+
+            <!-- Corazones en copa -->
+            <g id="leafHearts">
+              <g>
+                <path fill="var(--heart1)" d="M180 95 C180 78 195 70 208 70 C224 70 234 83 234 98 C234 124 206 140 180 160 C154 140 126 124 126 98 C126 83 136 70 152 70 C165 70 180 78 180 95Z"/>
+                <path fill="var(--heart3)" opacity=".55" d="M135 120 C135 110 143 105 150 105 C159 105 165 112 165 121 C165 137 149 147 135 158 C121 147 105 137 105 121 C105 112 111 105 120 105 C127 105 135 110 135 120Z"/>
+                <path fill="var(--heart2)" opacity=".7" d="M230 130 C230 120 238 115 245 115 C254 115 260 122 260 131 C260 147 244 157 230 168 C216 157 200 147 200 131 C200 122 206 115 215 115 C222 115 230 120 230 130Z"/>
+              </g>
+              <g>
+                <path fill="var(--heart2)" d="M285 145 C285 135 293 130 300 130 C309 130 315 137 315 146 C315 162 299 172 285 183 C271 172 255 162 255 146 C255 137 261 130 270 130 C277 130 285 135 285 145Z"/>
+                <path fill="var(--heart3)" opacity=".7" d="M305 210 C305 200 313 195 320 195 C329 195 335 202 335 211 C335 227 319 237 305 248 C291 237 275 227 275 211 C275 202 281 195 290 195 C297 195 305 200 305 210Z"/>
+                <path fill="var(--heart1)" opacity=".65" d="M265 235 C265 225 273 220 280 220 C289 220 295 227 295 236 C295 252 279 262 265 273 C251 262 235 252 235 236 C235 227 241 220 250 220 C257 220 265 225 265 235Z"/>
+              </g>
+              <g>
+                <path fill="var(--heart1)" d="M95 150 C95 140 103 135 110 135 C119 135 125 142 125 151 C125 167 109 177 95 188 C81 177 65 167 65 151 C65 142 71 135 80 135 C87 135 95 140 95 150Z"/>
+                <path fill="var(--heart2)" opacity=".72" d="M70 215 C70 205 78 200 85 200 C94 200 100 207 100 216 C100 232 84 242 70 253 C56 242 40 232 40 216 C40 207 46 200 55 200 C62 200 70 205 70 215Z"/>
+                <path fill="var(--heart3)" opacity=".65" d="M120 235 C120 225 128 220 135 220 C144 220 150 227 150 236 C150 252 134 262 120 273 C106 262 90 252 90 236 C90 227 96 220 105 220 C112 220 120 225 120 235Z"/>
+              </g>
+              <g>
+                <path fill="var(--heart2)" d="M215 70 C215 60 223 55 230 55 C239 55 245 62 245 71 C245 87 229 97 215 108 C201 97 185 87 185 71 C185 62 191 55 200 55 C207 55 215 60 215 70Z"/>
+                <path fill="var(--heart1)" opacity=".7" d="M255 88 C255 78 263 73 270 73 C279 73 285 80 285 89 C285 105 269 115 255 126 C241 115 225 105 225 89 C225 80 231 73 240 73 C247 73 255 78 255 88Z"/>
+              </g>
+              <g>
+                <path fill="var(--heart1)" d="M175 200 C175 190 183 185 190 185 C199 185 205 192 205 201 C205 217 189 227 175 238 C161 227 145 217 145 201 C145 192 151 185 160 185 C167 185 175 190 175 200Z"/>
+                <path fill="var(--heart3)" opacity=".7" d="M200 245 C200 235 208 230 215 230 C224 230 230 237 230 246 C230 262 214 272 200 283 C186 272 170 262 170 246 C170 237 176 230 185 230 C192 230 200 235 200 245Z"/>
+              </g>
+              <g>
+                <path fill="var(--heart2)" d="M150 90 C150 80 158 75 165 75 C174 75 180 82 180 91 C180 107 164 117 150 128 C136 117 120 107 120 91 C120 82 126 75 135 75 C142 75 150 80 150 90Z"/>
+                <path fill="var(--heart1)" opacity=".65" d="M115 105 C115 95 123 90 130 90 C139 90 145 97 145 106 C145 122 129 132 115 143 C101 132 85 122 85 106 C85 97 91 90 100 90 C107 90 115 95 115 105Z"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+
       </div>
 
-      <div id="treeWrap">
-        <svg id="treeSVG" viewBox="0 0 360 460" aria-label="Árbol de corazones">
-          <path class="pathGrow trunk" d="M180 440 C180 360 175 320 180 270 C186 210 205 195 210 160" />
-          <path class="pathGrow" d="M210 190 C250 200 280 175 300 145" />
-          <path class="pathGrow" d="M205 210 C245 240 275 245 310 225" />
-          <path class="pathGrow" d="M195 205 C160 235 120 240 80 215" />
-          <path class="pathGrow" d="M190 180 C150 185 125 165 100 135" />
-          <path class="pathGrow" d="M205 150 C235 120 250 95 250 70" />
-
-          <g id="leafHearts">
-            <g>
-              <path fill="var(--heart1)" d="M180 95 C180 78 195 70 208 70 C224 70 234 83 234 98 C234 124 206 140 180 160 C154 140 126 124 126 98 C126 83 136 70 152 70 C165 70 180 78 180 95Z"/>
-              <path fill="var(--heart3)" opacity=".55" d="M135 120 C135 110 143 105 150 105 C159 105 165 112 165 121 C165 137 149 147 135 158 C121 147 105 137 105 121 C105 112 111 105 120 105 C127 105 135 110 135 120Z"/>
-              <path fill="var(--heart2)" opacity=".7" d="M230 130 C230 120 238 115 245 115 C254 115 260 122 260 131 C260 147 244 157 230 168 C216 157 200 147 200 131 C200 122 206 115 215 115 C222 115 230 120 230 130Z"/>
-            </g>
-            <g>
-              <path fill="var(--heart2)" d="M285 145 C285 135 293 130 300 130 C309 130 315 137 315 146 C315 162 299 172 285 183 C271 172 255 162 255 146 C255 137 261 130 270 130 C277 130 285 135 285 145Z"/>
-              <path fill="var(--heart3)" opacity=".7" d="M305 210 C305 200 313 195 320 195 C329 195 335 202 335 211 C335 227 319 237 305 248 C291 237 275 227 275 211 C275 202 281 195 290 195 C297 195 305 200 305 210Z"/>
-              <path fill="var(--heart1)" opacity=".65" d="M265 235 C265 225 273 220 280 220 C289 220 295 227 295 236 C295 252 279 262 265 273 C251 262 235 252 235 236 C235 227 241 220 250 220 C257 220 265 225 265 235Z"/>
-            </g>
-            <g>
-              <path fill="var(--heart1)" d="M95 150 C95 140 103 135 110 135 C119 135 125 142 125 151 C125 167 109 177 95 188 C81 177 65 167 65 151 C65 142 71 135 80 135 C87 135 95 140 95 150Z"/>
-              <path fill="var(--heart2)" opacity=".72" d="M70 215 C70 205 78 200 85 200 C94 200 100 207 100 216 C100 232 84 242 70 253 C56 242 40 232 40 216 C40 207 46 200 55 200 C62 200 70 205 70 215Z"/>
-              <path fill="var(--heart3)" opacity=".65" d="M120 235 C120 225 128 220 135 220 C144 220 150 227 150 236 C150 252 134 262 120 273 C106 262 90 252 90 236 C90 227 96 220 105 220 C112 220 120 225 120 235Z"/>
-            </g>
-            <g>
-              <path fill="var(--heart2)" d="M215 70 C215 60 223 55 230 55 C239 55 245 62 245 71 C245 87 229 97 215 108 C201 97 185 87 185 71 C185 62 191 55 200 55 C207 55 215 60 215 70Z"/>
-              <path fill="var(--heart1)" opacity=".7" d="M255 88 C255 78 263 73 270 73 C279 73 285 80 285 89 C285 105 269 115 255 126 C241 115 225 105 225 89 C225 80 231 73 240 73 C247 73 255 78 255 88Z"/>
-            </g>
-            <g>
-              <path fill="var(--heart1)" d="M175 200 C175 190 183 185 190 185 C199 185 205 192 205 201 C205 217 189 227 175 238 C161 227 145 217 145 201 C145 192 151 185 160 185 C167 185 175 190 175 200Z"/>
-              <path fill="var(--heart3)" opacity=".7" d="M200 245 C200 235 208 230 215 230 C224 230 230 237 230 246 C230 262 214 272 200 283 C186 272 170 262 170 246 C170 237 176 230 185 230 C192 230 200 235 200 245Z"/>
-            </g>
-            <g>
-              <path fill="var(--heart2)" d="M150 90 C150 80 158 75 165 75 C174 75 180 82 180 91 C180 107 164 117 150 128 C136 117 120 107 120 91 C120 82 126 75 135 75 C142 75 150 80 150 90Z"/>
-              <path fill="var(--heart1)" opacity=".65" d="M115 105 C115 95 123 90 130 90 C139 90 145 97 145 106 C145 122 129 132 115 143 C101 132 85 122 85 106 C85 97 91 90 100 90 C107 90 115 95 115 105Z"/>
-            </g>
-          </g>
-        </svg>
+      <div id="counter">
+        <span class="label">Mi amor por ti comenzó hace…</span>
+        <span class="time" id="timeText">0 días 00 horas 00 minutos 00 segundos</span>
       </div>
-    </div>
-
-    <div id="counter">
-      <span class="label">Mi amor por ti comenzó hace… </span>
-      <span class="time" id="timeText">0 días 00 horas 00 minutos 00 segundos</span>
     </div>
   </div>
-</div>
 
-<script>
-/** ====== Personaliza aquí ====== */
-const message =
-`Para el amor de mi vida: Sigri
-
-Si pudiera elegir un lugar seguro,
+  <script>
+    /** ====== PERSONALIZA TEXTO AQUÍ ====== */
+    const message =
+`Si pudiera elegir un lugar seguro,
 sería a tu lado.
 
 Cuanto más tiempo estoy contigo,
 más te amo.`;
 
-// ✅ 1 de Enero 2025, 6:30 PM (hora local del dispositivo)
-const startDate = new Date(2025, 0, 1, 18, 30, 0);
+    // ✅ 1 de Enero 2025, 6:30 PM (hora local del dispositivo)
+    const startDate = new Date(2025, 0, 1, 18, 30, 0);
 
-/** ====== Runtime ====== */
-const startScreen = document.getElementById("startScreen");
-const hotspot     = document.getElementById("hotspot");
-const scene       = document.getElementById("scene");
-const textBox     = document.getElementById("text");
-const timeText    = document.getElementById("timeText");
+    /** ====== ELEMENTOS ====== */
+    const startScreen = document.getElementById("startScreen");
+    const hotspot     = document.getElementById("hotspot");
+    const scene       = document.getElementById("scene");
+    const textBox     = document.getElementById("text");
+    const timeText    = document.getElementById("timeText");
+    const treeSVG     = document.getElementById("treeSVG");
 
-let typed=false;
-let falling=false;
+    let typed = false;
+    let leaves = false;
 
-hotspot.addEventListener("click", startExperience);
-hotspot.addEventListener("touchstart", (e)=>{ e.preventDefault(); startExperience(); }, {passive:false});
+    hotspot.addEventListener("click", startExperience);
+    hotspot.addEventListener("touchstart", (e)=>{ e.preventDefault(); startExperience(); }, {passive:false});
 
-function startExperience(){
-  startScreen.style.display="none";
-  scene.style.display="block";
+    function startExperience(){
+      startScreen.style.display = "none";
+      scene.style.display = "block";
 
-  setTimeout(() => { if(!typed){ typeText(); typed=true; } }, 3200);
-  setTimeout(() => { if(!falling){ startFallingHearts(); falling=true; } }, 4300);
+      // Activa animaciones del árbol
+      treeSVG.classList.add("run");
 
-  updateCounter();
-  setInterval(updateCounter, 1000);
-}
+      // Texto en máquina
+      setTimeout(() => { if(!typed){ typeText(); typed=true; } }, 1000);
 
-function typeText(){
-  textBox.textContent = "";
-  let i=0;
-  const interval = setInterval(()=>{
-    textBox.textContent += message[i] ?? "";
-    i++;
-    if(i > message.length) clearInterval(interval);
-  }, 32);
-}
+      // Corazones que se desprenden del árbol
+      setTimeout(() => { if(!leaves){ startLeafHearts(); leaves=true; } }, 2200);
 
-function pad(n){ return String(n).padStart(2,"0"); }
+      // contador
+      updateCounter();
+      setInterval(updateCounter, 1000);
+    }
 
-function updateCounter(){
-  const now = new Date();
-  const diff = now - startDate;
+    function typeText(){
+      textBox.textContent = "";
+      let i=0;
+      const interval = setInterval(()=>{
+        textBox.textContent += message[i] ?? "";
+        i++;
+        if(i > message.length) clearInterval(interval);
+      }, 30);
+    }
 
-  const d = Math.floor(diff/86400000);
-  const h = Math.floor(diff/3600000)%24;
-  const m = Math.floor(diff/60000)%60;
-  const s = Math.floor(diff/1000)%60;
+    function pad(n){ return String(n).padStart(2,"0"); }
 
-  timeText.textContent = `${d} días ${pad(h)} horas ${pad(m)} minutos ${pad(s)} segundos`;
-}
+    function updateCounter(){
+      const now = new Date();
+      const diff = now - startDate;
 
-function startFallingHearts(){
-  const endAt = Date.now() + 12000;
-  const spawn = () => {
-    if(Date.now() > endAt) return;
-    const burst = 1 + Math.floor(Math.random()*3);
-    for(let i=0;i<burst;i++) createFallingHeart();
-    setTimeout(spawn, 220 + Math.random()*280);
-  };
-  spawn();
-}
+      const d = Math.floor(diff/86400000);
+      const h = Math.floor(diff/3600000)%24;
+      const m = Math.floor(diff/60000)%60;
+      const s = Math.floor(diff/1000)%60;
 
-function createFallingHeart(){
-  const el = document.createElement("div");
-  el.className = "fallHeart";
-  el.textContent = "❤";
+      timeText.textContent = `${d} días ${pad(h)} horas ${pad(m)} minutos ${pad(s)} segundos`;
+    }
 
-  const size = 12 + Math.random()*18;
-  el.style.fontSize = size + "px";
+    /** Corazones “hojas” saliendo del árbol */
+    function startLeafHearts(){
+      const endAt = Date.now() + 14000; // 14s bonitos
 
-  const colors = ["var(--heart1)","var(--heart2)","var(--heart3)"];
-  el.style.color = colors[Math.floor(Math.random()*colors.length)];
+      const spawn = () => {
+        if(Date.now() > endAt) return;
 
-  const x = Math.random()*100;
-  const drift = (-40 + Math.random()*80) + "px";
-  const rot = (-260 + Math.random()*520) + "deg";
-  const dur = (4.8 + Math.random()*3.2) + "s";
-  const delay = (Math.random()*0.6) + "s";
+        const burst = 1 + Math.floor(Math.random()*3);
+        for(let i=0;i<burst;i++) createLeafFromTree();
 
-  el.style.setProperty("--x", x + "vw");
-  el.style.setProperty("--drift", drift);
-  el.style.setProperty("--rot", rot);
-  el.style.animationDuration = dur;
-  el.style.animationDelay = delay;
+        setTimeout(spawn, 180 + Math.random()*240);
+      };
 
-  document.body.appendChild(el);
-  setTimeout(()=> el.remove(), (parseFloat(dur)+parseFloat(delay))*1000 + 200);
-}
-</script>
+      spawn();
+    }
 
+    function createLeafFromTree(){
+      const r = treeSVG.getBoundingClientRect();
+
+      // origen: zona de copa (ajustado para verse natural)
+      const startX = r.left + r.width * (0.52 + (Math.random()*0.30 - 0.15));
+      const startY = r.top  + r.height * (0.28 + (Math.random()*0.24 - 0.12));
+
+      const el = document.createElement("div");
+      el.className = "leafHeart";
+      el.textContent = "❤";
+
+      const size = 12 + Math.random()*20;
+      el.style.fontSize = size + "px";
+
+      const colors = ["var(--heart1)","var(--heart2)","var(--heart3)"];
+      el.style.color = colors[Math.floor(Math.random()*colors.length)];
+
+      const dx = (-160 + Math.random()*320) + "px";
+      const dy = (360 + Math.random()*520) + "px";
+      const rot = (-320 + Math.random()*640) + "deg";
+      const dur = (3.2 + Math.random()*2.8) + "s";
+      const delay = (Math.random()*0.45) + "s";
+      const sc = (0.85 + Math.random()*0.45).toFixed(2);
+
+      el.style.setProperty("--sx", startX + "px");
+      el.style.setProperty("--sy", startY + "px");
+      el.style.setProperty("--dx", dx);
+      el.style.setProperty("--dy", dy);
+      el.style.setProperty("--rot", rot);
+      el.style.setProperty("--sc", sc);
+
+      el.style.animationDuration = dur;
+      el.style.animationDelay = delay;
+
+      document.body.appendChild(el);
+      setTimeout(()=> el.remove(), (parseFloat(dur)+parseFloat(delay))*1000 + 250);
+    }
+  </script>
 </body>
 </html>
