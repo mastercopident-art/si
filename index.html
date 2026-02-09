@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Para el amor de mi vida</title>
 
-  <!-- Fuentes -->
+  <!-- Fuentes bonitas -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
       --ink:#1f1f1f;
       --muted:#6b6b6b;
 
-      --paper1: rgba(255,255,255,.78);
-      --paper2: rgba(255,255,255,.54);
+      --paper1: rgba(255,255,255,.86);
+      --paper2: rgba(255,255,255,.62);
 
       --trunk:#8b5a2b;
       --branch:#7a4c26;
@@ -35,92 +35,185 @@
     body{
       margin:0;
       font-family:Inter, system-ui, sans-serif;
-      background:var(--bg);
+      background: radial-gradient(1200px 500px at 50% 0%, #ffffff55, transparent 60%), var(--bg);
       color:var(--ink);
+      overflow-x:hidden;
+    }
+
+    /* =========================
+       PANTALLA 1 (ENFERMERA)
+    ========================= */
+    #startScreen{
+      position:fixed;
+      inset:0;
+      z-index:50;
+      background:#000;
+    }
+
+    #startImg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:50% 35%;
+      transform:scale(.96); /* “aleja” un poco */
+      transform-origin:50% 35%;
+      filter:saturate(1.05) contrast(1.03);
+    }
+
+    #startShade{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,.60), rgba(0,0,0,.18) 45%, rgba(0,0,0,.05));
+    }
+
+    /* Zona tocable del corazón (hotspot) */
+    #heartHotspot{
+      position:absolute;
+      left:50%;
+      top:52%;
+      width:120px;
+      height:120px;
+      transform:translate(-50%,-50%);
+      border-radius:999px;
+      background:rgba(255, 80, 120, .18);
+      border:1px solid rgba(255, 120, 160, .18);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      transition: transform .15s ease, background .2s ease;
+    }
+    #heartHotspot:active{ transform:translate(-50%,-50%) scale(.96); }
+    #heartHotspot .miniHeart{
+      font-size:26px;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.35));
+      animation:pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform:scale(1); opacity:.95; }
+      50%{ transform:scale(1.12); opacity:1; }
+    }
+
+    #startLabel{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:min(92vw, 520px);
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(0,0,0,.10);
+      border-radius:18px;
+      padding:12px 14px;
+      text-align:center;
+      font-family:"Playfair Display", serif;
+      font-size:1.02rem;
+      box-shadow: 0 18px 45px rgba(0,0,0,.20);
+    }
+
+    /* =========================
+       PANTALLA 2 (CARTA)
+    ========================= */
+    #app{
+      min-height:100vh;
       display:flex;
       justify-content:center;
       align-items:center;
-      padding:16px;
+      padding:18px;
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    body.ready #app{
+      opacity:1;
+      transform:none;
     }
 
-    /* ================= CARD ================= */
     #card{
       max-width:760px;
       width:100%;
       background:linear-gradient(180deg,var(--paper1),var(--paper2));
       border-radius:26px;
       box-shadow:var(--shadow);
-      padding:32px 32px 28px;
+      padding:30px 30px 24px;
       display:grid;
       grid-template-columns: 1.1fr .9fr;
-      gap:24px;
+      gap:22px;
+      position:relative;
+      overflow:hidden;
     }
 
-    /* ================= TEXT ================= */
+    /* Texto */
     h1{
       font-family:"Playfair Display", serif;
       font-weight:700;
       margin:0 0 6px 0;
+      font-size:1.55rem;
     }
     .subtitle{
       color:var(--muted);
-      margin-bottom:16px;
+      margin-bottom:14px;
+      font-size:1rem;
     }
     p{
       line-height:1.55;
       margin:0 0 10px 0;
+      font-size:1.02rem;
     }
     .question{
-      margin-top:12px;
-      font-weight:700;
+      margin-top:10px;
+      font-weight:800;
+      font-size:1.05rem;
     }
     .signature{
-      margin-top:14px;
+      margin-top:12px;
       font-family:"Playfair Display", serif;
       font-size:1.05rem;
     }
 
-    /* ================= TREE ================= */
+    /* Árbol */
     #treeWrap{
       display:flex;
       justify-content:center;
       align-items:center;
       position:relative;
+      min-height:220px;
     }
-
     #treeSvg{
       width:320px;
       max-width:100%;
       height:auto;
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,.10));
     }
 
-    /* ================= COUNTER ================= */
+    /* Contador */
     #counter{
-      margin-top:18px;
+      margin-top:16px;
       padding:14px 16px;
       border-radius:16px;
-      background:var(--paper2);
+      background:rgba(255,255,255,.55);
       border:1px solid rgba(0,0,0,.08);
       display:flex;
       justify-content:space-between;
       align-items:flex-end;
       gap:12px;
     }
-
     #counterLabel{
       color:var(--muted);
       font-size:.95rem;
       line-height:1.2;
     }
-
     #counterTime{
-      font-weight:800;
+      font-weight:900;
       letter-spacing:.01em;
       font-size:1.05rem;
       text-align:right;
+      font-variant-numeric: tabular-nums;
     }
 
-    /* ================= FLOATING HEARTS ================= */
+    /* Corazones flotando */
     .leafHeart{
       position:fixed;
       left:0;
@@ -128,18 +221,20 @@
       pointer-events:none;
       will-change:transform,opacity;
       animation:floatUp linear forwards;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.18));
+      opacity:0;
     }
 
     @keyframes floatUp{
-      from{
+      0%{
         opacity:0;
         transform:
           translate(var(--sx),var(--sy))
           rotate(0deg)
-          scale(.8);
+          scale(.9);
       }
-      10%{ opacity:1; }
-      to{
+      12%{ opacity:1; }
+      100%{
         opacity:0;
         transform:
           translate(calc(var(--sx) + var(--dx)),
@@ -149,24 +244,27 @@
       }
     }
 
-    /* ================= MOBILE FIX ================= */
+    /* =========================
+       MOBILE (NO AMONTONADO)
+    ========================= */
     @media (max-width:760px){
       #card{
         grid-template-columns:1fr;
         padding:22px 18px;
+        gap:16px;
       }
 
       #treeWrap{
         order:2;
+        min-height:180px;
         padding-top:6px;
       }
 
       #treeSvg{
-        width:min(280px,78vw);
+        width:min(280px,74vw);
       }
 
       #counter{
-        margin-top:16px;
         flex-direction:column;
         align-items:flex-start;
       }
@@ -174,71 +272,111 @@
       #counterTime{
         text-align:left;
       }
+
+      /* Hotspot un poco más grande para dedo */
+      #heartHotspot{
+        width:132px;
+        height:132px;
+        top:54%;
+      }
     }
+
+    /* Util */
+    .hidden{ display:none !important; }
   </style>
 </head>
+
 <body>
 
-  <div id="card">
+  <!-- =========================
+       PANTALLA 1 (ENFERMERA)
+  ========================== -->
+  <div id="startScreen" aria-label="Inicio">
+    <img id="startImg" src="enfermera.jpg" alt="Enfermera" onerror="this.style.display='none'; document.getElementById('startLabel').textContent='No encontré la imagen 😬 Revisa que exista enfermera.jpg';">
+    <div id="startShade"></div>
 
-    <!-- TEXTO -->
-    <div id="text">
-      <h1>Para el amor de mi vida: Sigri</h1>
-      <div class="subtitle">
-        Una pequeña carta con un árbol que crece…<br>
-        como esto que siento por ti.
-      </div>
-
-      <p>Si pudiera elegir un lugar seguro,<br>sería a tu lado.</p>
-      <p>Cuanto más tiempo estoy contigo,<br>más te amo.</p>
-
-      <p><em>— I Love You</em></p>
-
-      <div class="question">¿Quieres ser mi Valentine’s Day?</div>
-      <div class="signature">— Rogelio</div>
-
-      <div id="counter">
-        <div id="counterLabel">
-          Mi amor por ti<br>comenzó hace…
-        </div>
-        <div id="counterTime"></div>
-      </div>
+    <!-- Hotspot del corazón -->
+    <div id="heartHotspot" title="Toca el corazón">
+      <div class="miniHeart">❤</div>
     </div>
 
-    <!-- ÁRBOL -->
-    <div id="treeWrap">
-      <svg id="treeSvg" viewBox="0 0 200 320" fill="none">
-        <!-- Tronco -->
-        <rect x="92" y="140" width="16" height="160" rx="8" fill="var(--trunk)"/>
-        <!-- Ramas -->
-        <path d="M100 160 C60 140, 40 120, 30 100" stroke="var(--branch)" stroke-width="10" stroke-linecap="round"/>
-        <path d="M100 160 C140 140, 160 120, 170 100" stroke="var(--branch)" stroke-width="10" stroke-linecap="round"/>
-
-        <!-- Corazones -->
-        <g fill="var(--heart1)">
-          <path d="M90 90c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
-          <path d="M120 80c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
-        </g>
-        <g fill="var(--heart2)">
-          <path d="M60 95c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
-          <path d="M140 95c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
-        </g>
-        <g fill="var(--heart3)">
-          <path d="M100 60c-12-12-36 6 0 36 36-30 12-48 0-36z"/>
-        </g>
-      </svg>
-    </div>
-
+    <div id="startLabel">Toca el corazón de la enfermera ❤</div>
   </div>
 
+  <!-- =========================
+       PANTALLA 2 (CARTA)
+  ========================== -->
+  <main id="app">
+    <div id="card">
+
+      <!-- Texto -->
+      <section id="text">
+        <h1>Para el amor de mi vida: Sigri</h1>
+        <div class="subtitle">
+          Una pequeña carta con un árbol que crece…<br>
+          como esto que siento por ti.
+        </div>
+
+        <p>Si pudiera elegir un lugar seguro,<br>sería a tu lado.</p>
+        <p>Cuanto más tiempo estoy contigo,<br>más te amo.</p>
+
+        <p><em>— I Love You</em></p>
+
+        <div class="question">¿Quieres ser mi Valentine’s Day?</div>
+        <div class="signature">— Rogelio</div>
+
+        <div id="counter">
+          <div id="counterLabel">Mi amor por ti<br>comenzó hace…</div>
+          <div id="counterTime"></div>
+        </div>
+      </section>
+
+      <!-- Árbol -->
+      <section id="treeWrap" aria-label="Árbol con corazones">
+        <svg id="treeSvg" viewBox="0 0 200 320" fill="none">
+          <!-- Tronco -->
+          <rect x="92" y="150" width="16" height="150" rx="8" fill="var(--trunk)"/>
+          <!-- Ramas -->
+          <path d="M100 170 C62 150, 44 132, 32 110" stroke="var(--branch)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M100 170 C138 150, 156 132, 168 110" stroke="var(--branch)" stroke-width="10" stroke-linecap="round"/>
+
+          <!-- Corazones -->
+          <g fill="var(--heart1)" opacity="0.95">
+            <path d="M90 95c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
+            <path d="M122 88c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
+          </g>
+          <g fill="var(--heart2)" opacity="0.95">
+            <path d="M64 102c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
+            <path d="M140 102c-10-10-30 5 0 30 30-25 10-40 0-30z"/>
+          </g>
+          <g fill="var(--heart3)" opacity="0.95">
+            <path d="M102 66c-12-12-36 6 0 36 36-30 12-48 0-36z"/>
+          </g>
+        </svg>
+      </section>
+
+    </div>
+  </main>
+
   <script>
-    /* ===== CONTADOR ===== */
-    const startDate = new Date("2024-01-01T00:00:00");
+    /* =========================
+       CONFIG
+    ========================== */
+
+    // ✅ Fecha REAL: 1 de enero 2025 a las 6:30 PM
+    // OJO: Esto usa la hora local del celular/PC.
+    const startDate = new Date(2025, 0, 1, 18, 30, 0); // (año, mesIndex, día, hora, min, seg)
+
+    const startScreen = document.getElementById("startScreen");
+    const heartHotspot = document.getElementById("heartHotspot");
     const counterEl = document.getElementById("counterTime");
 
+    /* =========================
+       CONTADOR
+    ========================== */
     function updateCounter(){
       const now = new Date();
-      let diff = Math.floor((now - startDate)/1000);
+      let diff = Math.max(0, Math.floor((now - startDate) / 1000));
 
       const days = Math.floor(diff / 86400);
       diff %= 86400;
@@ -250,42 +388,79 @@
       counterEl.textContent =
         `${days} días ${hours} horas ${minutes} minutos ${seconds} segundos`;
     }
-
     updateCounter();
-    setInterval(updateCounter,1000);
+    setInterval(updateCounter, 1000);
 
-    /* ===== HEARTS FLOATING ===== */
-    function spawnHeart(){
+    /* =========================
+       TRANSICIÓN: PANTALLA 1 -> 2
+    ========================== */
+    function goToLetter(){
+      startScreen.classList.add("hidden");
+      document.body.classList.add("ready");
+
+      // un mini “boom” de corazones al entrar
+      for(let i=0;i<10;i++){
+        setTimeout(spawnHeartFromTree, i*90);
+      }
+    }
+
+    heartHotspot.addEventListener("click", goToLetter);
+    heartHotspot.addEventListener("touchstart", goToLetter, {passive:true});
+
+    // Por defecto: NO mostrar carta hasta que toquen
+    // (pero si quieres que se vea desde inicio, comenta la línea de abajo)
+    document.body.classList.remove("ready");
+
+    /* =========================
+       CORAZONES FLOTANDO (desde el árbol)
+    ========================== */
+    function spawnHeartFromTree(){
+      const tree = document.getElementById("treeSvg");
+      if(!tree) return;
+
+      const rect = tree.getBoundingClientRect();
+
+      // punto de salida (copa del árbol)
+      const sx = rect.left + rect.width * (0.50 + (Math.random()*0.26 - 0.13));
+      const sy = rect.top  + rect.height * (0.28 + (Math.random()*0.22 - 0.11));
+
       const el = document.createElement("div");
       el.className = "leafHeart";
       el.textContent = "❤";
 
-      const size = 12 + Math.random()*18;
-      el.style.fontSize = size+"px";
+      const size = 12 + Math.random()*16;
+      el.style.fontSize = size + "px";
 
       const colors = ["var(--heart1)","var(--heart2)","var(--heart3)"];
       el.style.color = colors[Math.floor(Math.random()*colors.length)];
 
-      const rect = document.getElementById("treeSvg").getBoundingClientRect();
-      const sx = rect.left + rect.width/2;
-      const sy = rect.top + rect.height*0.3;
+      // movimiento
+      const dx = (-140 + Math.random()*280);
+      const dy = (260 + Math.random()*360);
+      const rot = (-220 + Math.random()*440);
+      const dur = (3.0 + Math.random()*2.2);
+      const delay = (Math.random()*0.45);
+      const sc = (0.85 + Math.random()*0.45).toFixed(2);
 
-      el.style.setProperty("--sx", sx+"px");
-      el.style.setProperty("--sy", sy+"px");
-      el.style.setProperty("--dx", (-120+Math.random()*240)+"px");
-      el.style.setProperty("--dy", (220+Math.random()*260)+"px");
-      el.style.setProperty("--rot", (-180+Math.random()*360)+"deg");
-      el.style.setProperty("--sc", (0.8+Math.random()*0.5).toFixed(2));
+      el.style.setProperty("--sx", sx + "px");
+      el.style.setProperty("--sy", sy + "px");
+      el.style.setProperty("--dx", dx + "px");
+      el.style.setProperty("--dy", dy + "px");
+      el.style.setProperty("--rot", rot + "deg");
+      el.style.setProperty("--sc", sc);
 
-      const dur = 3 + Math.random()*2;
-      el.style.animationDuration = dur+"s";
+      el.style.animationDuration = dur + "s";
+      el.style.animationDelay = delay + "s";
 
       document.body.appendChild(el);
-      setTimeout(()=>el.remove(), dur*1000+300);
+      setTimeout(()=>el.remove(), (dur+delay)*1000 + 250);
     }
 
-    setInterval(spawnHeart, 700);
-  </script>
+    // Solo flotan corazones cuando la carta está visible
+    setInterval(()=>{
+      if(document.body.classList.contains("ready")) spawnHeartFromTree();
+    }, 650);
 
+  </script>
 </body>
 </html>
