@@ -1,66 +1,166 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Para ti ❤️</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Para el amor de mi vida</title>
 
 <style>
+:root{
+  --bg:#f6efe6;
+  --heart:#d62828;
+  --text:#333;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  background:#f6f2ee;
+  font-family: 'Georgia', serif;
+  background:var(--bg);
   display:flex;
   justify-content:center;
   align-items:center;
   height:100vh;
   overflow:hidden;
-  font-family:Georgia, serif;
 }
 
-svg{
-  width:400px;
-  height:600px;
+#start{
+  cursor:pointer;
+  font-size:1.2rem;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  color:var(--heart);
 }
 
-/* Tronco y ramas */
-.trunk, .branch{
-  fill:none;
-  stroke:#7a4a2e;
-  stroke-width:6;
-  stroke-linecap:round;
-  stroke-dasharray:1000;
-  stroke-dashoffset:1000;
-  animation: draw 4s ease forwards;
+#scene{
+  display:none;
+  width:100%;
+  height:100%;
+  position:relative;
 }
 
-.branch{
-  stroke-width:4;
-  animation-delay:2s;
+#tree{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%) scale(0);
+  animation:growTree 3s forwards;
 }
 
-@keyframes draw{
-  to{ stroke-dashoffset:0; }
+@keyframes growTree{
+  to{transform:translateX(-50%) scale(1)}
 }
 
-/* Corazones */
 .heart{
-  fill:red;
-  opacity:0;
-  animation: pop 1s ease forwards;
+  position:absolute;
+  color:var(--heart);
+  font-size:14px;
+  animation:fall 6s linear infinite;
+  opacity:.8;
 }
 
-.h1{ animation-delay:4s; fill:#d62828;}
-.h2{ animation-delay:4.3s; fill:#e63946;}
-.h3{ animation-delay:4.6s; fill:#ff6b6b;}
-.h4{ animation-delay:4.9s; fill:#f77f7f;}
-.h5{ animation-delay:5.2s; fill:#ff8fa3;}
-
-@keyframes pop{
-  from{ transform:scale(0); opacity:0;}
-  to{ transform:scale(1); opacity:1;}
+@keyframes fall{
+  from{transform:translateY(-100px);opacity:1}
+  to{transform:translateY(100vh);opacity:0}
 }
 
-/* Texto */
 #text{
   position:absolute;
-  bottom:40px;
-  t
+  top:12%;
+  left:8%;
+  right:8%;
+  font-size:1.1rem;
+  color:var(--text);
+  white-space:pre-line;
+}
+
+#counter{
+  position:absolute;
+  bottom:6%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:.9rem;
+}
+
+</style>
+</head>
+<body>
+
+<div id="start">❤️ <span>San Valentín</span></div>
+
+<div id="scene">
+  <svg id="tree" width="200" height="300" viewBox="0 0 200 300">
+    <rect x="90" y="120" width="20" height="160" fill="#8b5a2b"/>
+    <g fill="#e63946">
+      <circle cx="100" cy="90" r="60"/>
+    </g>
+  </svg>
+
+  <div id="text"></div>
+  <div id="counter"></div>
+</div>
+
+<script>
+const start = document.getElementById("start");
+const scene = document.getElementById("scene");
+const textBox = document.getElementById("text");
+const counter = document.getElementById("counter");
+
+const message = 
+`Para el amor de mi vida:
+
+Si pudiera elegir un lugar seguro,
+sería a tu lado.
+
+Cuanto más tiempo estoy contigo,
+más te amo.
+
+— I Love You`;
+
+const startDate = new Date("2024-02-14T00:00:00");
+
+start.onclick = () => {
+  start.style.display="none";
+  scene.style.display="block";
+  setTimeout(typeText, 3500);
+  setInterval(updateCounter,1000);
+  createHearts();
+};
+
+function typeText(){
+  let i=0;
+  const interval=setInterval(()=>{
+    textBox.textContent += message[i];
+    i++;
+    if(i>=message.length) clearInterval(interval);
+  },40);
+}
+
+function updateCounter(){
+  const now = new Date();
+  const diff = now - startDate;
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor(diff/3600000)%24;
+  const m = Math.floor(diff/60000)%60;
+  const s = Math.floor(diff/1000)%60;
+  counter.textContent = `Mi amor por ti comenzó hace…
+${d} días ${h} horas ${m} minutos ${s} segundos`;
+}
+
+function createHearts(){
+  for(let i=0;i<20;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="❤";
+    h.style.left=Math.random()*100+"%";
+    h.style.animationDelay=Math.random()*5+"s";
+    h.style.fontSize=10+Math.random()*14+"px";
+    document.body.appendChild(h);
+  }
+}
+</script>
+
+</body>
+</html>
