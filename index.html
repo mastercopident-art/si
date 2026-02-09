@@ -4,88 +4,81 @@
 <meta charset="UTF-8">
 <title>Para el amor de mi vida</title>
 <style>
-  body{
-    margin:0;
-    background:#f5f5f5;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:flex-end;
-    overflow:hidden;
-    font-family: Georgia, serif;
-  }
+body{
+  margin:0;
+  background:#f5f5f5;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  overflow:hidden;
+  font-family: Georgia, serif;
+}
 
-  .tree{
-    position:relative;
-    width:260px;
-    height:100%;
-  }
+.tree{
+  position:relative;
+  width:320px;
+  height:100%;
+}
 
-  /* ===== TRONCO ===== */
-  .trunk-line{
-    position:absolute;
-    bottom:0;
-    width:8px;
-    background:linear-gradient(to top,#6b3e1e,#8b5a2b);
-    border-radius:6px;
-    height:0;
-    animation:growTrunk 4s ease-out forwards;
-    transform-origin:bottom;
-  }
+/* ===== TRONCO ===== */
+.trunk-line{
+  position:absolute;
+  bottom:0;
+  width:9px;
+  background:linear-gradient(to top,#6b3e1e,#8b5a2b);
+  border-radius:8px;
+  height:0;
+  animation:growTrunk 4s ease-out forwards;
+  transform-origin:bottom;
+}
 
-  .t1{left:120px; animation-delay:0s;}
-  .t2{left:130px; animation-delay:.3s;}
-  .t3{left:140px; animation-delay:.6s;}
-  .t4{left:150px; animation-delay:.4s;}
-  .t5{left:160px; animation-delay:.2s;}
+.t1{left:145px; animation-delay:0s;}
+.t2{left:155px; animation-delay:.3s;}
+.t3{left:165px; animation-delay:.6s;}
+.t4{left:175px; animation-delay:.4s;}
+.t5{left:185px; animation-delay:.2s;}
 
-  @keyframes growTrunk{
-    to{height:320px;}
-  }
+@keyframes growTrunk{
+  to{height:340px;}
+}
 
-  /* ===== RAMAS ===== */
-  .branch{
-    position:absolute;
-    bottom:260px;
-    width:6px;
-    height:0;
-    background:#8b5a2b;
-    border-radius:6px;
-    transform-origin:bottom;
-    opacity:0;
-    animation:growBranch 2.5s ease-out forwards;
-  }
+/* ===== RAMAS CURVAS ===== */
+.branch{
+  position:absolute;
+  bottom:260px;
+  width:7px;
+  height:0;
+  background:#8b5a2b;
+  border-radius:10px;
+  transform-origin:bottom;
+  opacity:0;
+  animation:growBranch 3s ease-out forwards;
+}
 
-  /* ramas izquierda */
-  .b1{left:135px; transform:rotate(-35deg); animation-delay:4.2s;}
-  .b2{left:125px; transform:rotate(-55deg); animation-delay:4.6s;}
+/* izquierda */
+.b1{
+  left:160px;
+  transform:rotate(-25deg) skewX(-10deg);
+  animation-delay:4.2s;
+}
+.b2{
+  left:150px;
+  transform:rotate(-45deg) skewX(-15deg);
+  animation-delay:4.6s;
+}
+.b3{
+  left:140px;
+  transform:rotate(-65deg) skewX(-20deg);
+  animation-delay:5s;
+}
 
-  /* ramas derecha */
-  .b3{left:155px; transform:rotate(35deg); animation-delay:4.4s;}
-  .b4{left:165px; transform:rotate(55deg); animation-delay:4.8s;}
-
-  @keyframes growBranch{
-    from{height:0; opacity:0;}
-    to{height:120px; opacity:1;}
-  }
-</style>
-</head>
-<body>
-
-<div class="tree">
-  <!-- Tronco -->
-  <div class="trunk-line t1"></div>
-  <div class="trunk-line t2"></div>
-  <div class="trunk-line t3"></div>
-  <div class="trunk-line t4"></div>
-  <div class="trunk-line t5"></div>
-
-  <!-- Ramas -->
-  <div class="branch b1"></div>
-  <div class="branch b2"></div>
-  <div class="branch b3"></div>
-  <div class="branch b4"></div>
-</div>
-
-</body>
-</html>
+/* derecha */
+.b4{
+  left:170px;
+  transform:rotate(25deg) skewX(10deg);
+  animation-delay:4.4s;
+}
+.b5{
+  left:180px;
+  transform:rotate(45deg) skewX(15deg);
