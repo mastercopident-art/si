@@ -42,17 +42,20 @@ body{
   width:100%;
   height:100%;
   object-fit:cover;
-  object-position:center;
+
+  /* ✅ “Alejar” la imagen (menos recorte/zoom) */
+  object-position: 50% 32%;
+  transform: scale(0.92);
+  transform-origin: 50% 35%;
+
   filter: saturate(1.05) contrast(1.03);
 }
 
-/* soft gradient for readable text */
 #startShade{
   position:absolute; inset:0;
-  background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,.15) 40%, rgba(0,0,0,.05));
+  background: linear-gradient(to top, rgba(0,0,0,.58), rgba(0,0,0,.18) 45%, rgba(0,0,0,.05));
 }
 
-/* bottom instruction */
 #startLabel{
   position:absolute;
   left:50%;
@@ -71,7 +74,8 @@ body{
 /* Heart hotspot */
 #hotspot{
   position:absolute;
-  /* AJUSTA ESTO si tu imagen cambia: */
+
+  /* Si quieres mover el corazón sobre el pecho, ajusta esto: */
   left: 56%;
   top: 46%;
 
@@ -152,7 +156,19 @@ body{
   color:var(--ink);
   padding-right:10px;
 }
-#signature{margin-top:14px;color:var(--muted);font-style:italic}
+
+#signature{
+  margin-top:14px;
+  color:var(--muted);
+  font-style:italic;
+}
+
+#question{
+  margin-top:14px;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--ink);
+}
 
 #counter{
   position:absolute;
@@ -209,6 +225,7 @@ body{
 #leafHearts g:nth-child(4){animation-delay:2.65s}
 #leafHearts g:nth-child(5){animation-delay:2.8s}
 #leafHearts g:nth-child(6){animation-delay:2.95s}
+
 @keyframes pop{
   0%{opacity:0; transform:scale(.85)}
   60%{opacity:1; transform:scale(1.05)}
@@ -224,6 +241,7 @@ body{
   opacity:.95;
   filter: drop-shadow(0 6px 8px rgba(0,0,0,.12));
 }
+
 @keyframes fall{
   0%{ transform: translate3d(var(--x), -40px, 0) rotate(0deg); opacity:0}
   10%{opacity:1}
@@ -248,8 +266,8 @@ body{
 
 <!-- START SCREEN -->
 <div id="startScreen">
-  <!-- Pon tu archivo enfermera.jpg junto a index.html -->
-  <img id="startImg" src="./enfermera.jpg" alt="Enfermera" />
+  <img id="startImg" src="./enfermera.jpg" alt="Enfermera"
+       onerror="this.style.display='none'; document.getElementById('startLabel').textContent='No encontré la imagen 😅 Revisa que exista: enfermera.jpg';" />
   <div id="startShade"></div>
 
   <div id="hotspot" aria-label="Tocar corazón"></div>
@@ -264,6 +282,7 @@ body{
       <div>
         <div id="text"></div>
         <div id="signature">— I Love You</div>
+        <div id="question">¿Quieres ser mi Valentine’s Day?</div>
       </div>
 
       <div id="treeWrap">
@@ -310,7 +329,7 @@ body{
 
     <div id="counter">
       <span class="label">Mi amor por ti comenzó hace… </span>
-      <span class="time" id="timeText">0 días 0 horas 0 minutos 0 segundos</span>
+      <span class="time" id="timeText">0 días 00 horas 00 minutos 00 segundos</span>
     </div>
   </div>
 </div>
@@ -318,7 +337,7 @@ body{
 <script>
 /** ====== Personaliza aquí ====== */
 const message =
-`Para el amor de mi vida:
+`Para el amor de mi vida: Sigri
 
 Si pudiera elegir un lugar seguro,
 sería a tu lado.
@@ -326,7 +345,8 @@ sería a tu lado.
 Cuanto más tiempo estoy contigo,
 más te amo.`;
 
-const startDate = new Date("2024-02-14T00:00:00");
+// ✅ 1 de Enero 2025, 6:30 PM (hora local del dispositivo)
+const startDate = new Date(2025, 0, 1, 18, 30, 0);
 
 /** ====== Runtime ====== */
 const startScreen = document.getElementById("startScreen");
@@ -362,6 +382,8 @@ function typeText(){
   }, 32);
 }
 
+function pad(n){ return String(n).padStart(2,"0"); }
+
 function updateCounter(){
   const now = new Date();
   const diff = now - startDate;
@@ -371,7 +393,7 @@ function updateCounter(){
   const m = Math.floor(diff/60000)%60;
   const s = Math.floor(diff/1000)%60;
 
-  timeText.textContent = `${d} días ${h} horas ${m} minutos ${s} segundos`;
+  timeText.textContent = `${d} días ${pad(h)} horas ${pad(m)} minutos ${pad(s)} segundos`;
 }
 
 function startFallingHearts(){
